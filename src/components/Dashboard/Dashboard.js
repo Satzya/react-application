@@ -15,6 +15,7 @@ class Dashboard extends React.Component {
     setNavData = (idContent) => {
         if (idContent === "Profile") {
             this.setState({ buttonName: "Profile" })
+
         } else {
             this.setState({ buttonName: "Add Record" })
         }
