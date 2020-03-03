@@ -9,20 +9,28 @@ class Dashboard extends React.Component {
         this.state = {
             buttonName: 'Add Record',
             active: "active",
-            active2: "active",
+            inactive: "",
             navTabs: ["Home", "Profile", "Account"]
         }
     }
 
     setNavData = async (idContent) => {
-        if (idContent.currentTarget.id === "Profile") {
-            idContent.currentTarget.className = this.state.active
-            idContent.currentTarget.classList.remove("active")
-            console.log(idContent)
+        console.log(idContent.currentTarget.id);
+        switch (idContent.currentTarget.id) {
+            case "Profile": {
+                idContent.currentTarget.className = this.state.active
+                this.setState({ active: "" })
+                break;
+            }
+            case "Home": {
+                idContent.currentTarget.className = this.state.active
+                this.setState({ active: "" })
+                break;
+            }
+            default: {
+                console.log("HAHA")
+            }
         }
-        // await this.setState({ active2: "" })
-        // console.log(this.state.active2)
-        // this.setState({ buttonName: "Profile" })
     }
 
     render() {
@@ -31,6 +39,7 @@ class Dashboard extends React.Component {
                 <Header userName={this.props.userName}
                     setNavData={this.setNavData}
                     active={this.state.active}
+                    inactive={this.state.inactive}
                     navTabs={this.state.navTabs}
                 />
                 <h1 className="User-data">Dashboard</h1>

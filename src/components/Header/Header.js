@@ -6,32 +6,33 @@ class Header extends React.Component {
     loadTabIndexes = () => {
         (this.props.navTabs).forEach((e, i) => {
             this.tabIndexValues.push(
-                <li key={e} onClick={this.getNavSection}
-                    className={(i === 0) ? this.props.active : ""}
+                <li key={e}
+                    className={(i === 0) ? this.props.active : this.props.inactive}
                     id={e}>
                     <a>{e}</a>
-                </li>)
+                </li>
+            )
         }
         )
         return this.tabIndexValues
     }
 
     getNavSection = (event) => {
+        console.log(event)
         this.props.setNavData(event)
     }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        // console.log(nextProps)
-        // console.log(nextState)
-        // nextProps.active = this.props.active
-        return false
+    constructor(props) {
+        super(props)
+        this.myRef = React.createRef();
     }
+
     render() {
         return (
             <div>
                 <h1 className="App-header App">Welcome {this.props.userName}</h1>
-                <ul className="nav nav-tabs">
+                <ul className="nav nav-tabs" onClick={this.myRef}>
                     {this.loadTabIndexes()}
+                    {this.tabIndexValues = []}
                 </ul>
             </div>
         )
