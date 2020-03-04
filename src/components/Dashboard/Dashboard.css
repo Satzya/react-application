@@ -2,3 +2,12 @@
     display: block;
     background-color: chocolate;
 }
+
+.nextButtonPlacer{
+    margin-top: 20px;
+}
+
+.backButtonPlacer{
+    margin-right: 100px;
+    margin-top: 20px;
+}

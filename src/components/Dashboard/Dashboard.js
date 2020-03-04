@@ -1,6 +1,7 @@
 import React from "react";
 import Header from './../Header/Header';
 import Footer from './../Footer/Footer';
+import Profile from './../Profile/Profile';
 import './Dashboard.css'
 
 class Dashboard extends React.Component {
@@ -9,28 +10,75 @@ class Dashboard extends React.Component {
         this.state = {
             buttonName: 'Add Record',
             active: "active",
-            inactive: "",
-            navTabs: ["Home", "Profile", "Account"]
+            navTabs: ["Home", "Profile", "Account"],
+            dashHiddenFlag: false,
+            profileHiddenFlag: true,
+            sectionHeading: "Plan Journey",
+            journeyDetails: {
+                sourceLocation: "Source",
+                destLocation: "Destination",
+            },
+            steps: "Step 1",
+            backButtonDisabled: true
         }
     }
 
-    setNavData = async (idContent) => {
-        console.log(idContent.currentTarget.id);
+    setNavData = (idContent) => {
+        idContent.currentTarget.parentNode.childNodes.forEach((element) => {
+            element.classList.remove("active")
+        })
+        idContent.currentTarget.classList.add("active")
         switch (idContent.currentTarget.id) {
             case "Profile": {
-                idContent.currentTarget.className = this.state.active
-                this.setState({ active: "" })
+                this.setState({ buttonName: "Profile" })
+                this.setState({ profileHiddenFlag: false })
+                this.setState({ dashHiddenFlag: true })
+                this.setState({ sectionHeading: "Profile Details" })
                 break;
             }
             case "Home": {
-                idContent.currentTarget.className = this.state.active
-                this.setState({ active: "" })
+                this.setState({ buttonName: "Add data" })
+                this.setState({ dashHiddenFlag: false })
+                this.setState({ profileHiddenFlag: true })
+                this.setState({ sectionHeading: "Plan Journey" })
                 break;
             }
             default: {
-                console.log("HAHA")
+                this.setState({ buttonName: "Non Operational" })
+                break;
             }
         }
+    }
+
+
+    setChanges = (event) => {
+        console.log(event.currentTarget.classList)
+        this.setState({
+            journeyDetails: Object.assign({}, this.state.journeyDetails, {
+                sourceLocation: this.state.journeyDetails.destLocation
+            })
+        })
+        this.setState({ steps: "Step 2" })
+    }
+
+    jj = () => {
+        this.setState({ backButtonDisabled: false })
+    }
+
+    dashBoardContent = () => {
+        return (
+            <div>
+                <h1 className="User-data">{this.state.sectionHeading}</h1>
+                <div hidden={this.state.dashHiddenFlag}>
+                    <label>{this.state.steps}</label><br />
+                    <input type="text" placeholder={this.state.journeyDetails.sourceLocation} /><br />
+                    <div>
+                        <button className="btn btn-primary backButtonPlacer" disabled={this.state.backButtonDisabled} onClick={this.setChanges}>Back</button>
+                        <button className="btn btn-primary nextButtonPlacer" onClick={this.jj}>Next</button>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     render() {
@@ -42,8 +90,8 @@ class Dashboard extends React.Component {
                     inactive={this.state.inactive}
                     navTabs={this.state.navTabs}
                 />
-                <h1 className="User-data">Dashboard</h1>
-                <button className="btn Add-record">{this.state.buttonName}</button>
+                {this.dashBoardContent()}
+                <Profile profileHiddenFlag={this.state.profileHiddenFlag} />
                 <Footer />
             </div>
         )
