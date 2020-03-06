@@ -1,7 +1,7 @@
 import React from "react";
-import Header from './../Header/Header';
-import Footer from './../Footer/Footer';
-import Profile from './../Profile/Profile';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+import Profile from '../Profile/Profile';
 import './Dashboard.css'
 
 class Dashboard extends React.Component {
@@ -19,9 +19,9 @@ class Dashboard extends React.Component {
                 date: "Date"
             },
             formData: {
-                sourceInput: "",
-                destInput: "",
-                dateInput: ""
+                source: "",
+                destination: "",
+                date: ""
             },
             steps: "Step 1",
             dashHiddenFlag: false,
@@ -59,6 +59,17 @@ class Dashboard extends React.Component {
     }
 
     counter = 0
+    async saveData() {
+        const response = await fetch("http://localhost:9999/abc", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.formData)
+        })
+        console.log(await response.json())
+    }
     getNextData = (event) => {
         event.preventDefault()
         switch (this.counter) {
@@ -67,7 +78,7 @@ class Dashboard extends React.Component {
                     journeyDetails: {
                         ...this.state.journeyDetails,
                         inputPlaceHolder: "Destination"
-                    }, steps: "Step 2", currentValue: this.state.formData.destInput, backButtonDisabled: false
+                    }, steps: "Step 2", currentValue: this.state.formData.destination, backButtonDisabled: false
                 })
                 this.counter += 1;
                 console.log(this.counter)
@@ -77,13 +88,16 @@ class Dashboard extends React.Component {
                     journeyDetails: {
                         ...this.state.journeyDetails,
                         inputPlaceHolder: "Date"
-                    }, steps: "Step 3", currentValue: this.state.formData.dateInput, inputType: "date"
+                    }, steps: "Step 3", currentValue: this.state.formData.date, inputType: "date"
                 })
                 this.counter += 1
                 break;
             } case 2: {
                 this.setState({ inputTextHiddenFlag: true, steps: "Review Particulars" })
                 this.counter += 1
+                break;
+            } case 3: {
+                this.saveData()
             }
         }
     }
@@ -92,7 +106,7 @@ class Dashboard extends React.Component {
         console.log(this.counter)
         switch (this.counter) {
             case 3: {
-                this.setState({ steps: "Step 3", inputType: "date", inputTextHiddenFlag: false, currentValue: this.state.formData.dateInput })
+                this.setState({ steps: "Step 3", inputType: "date", inputTextHiddenFlag: false, currentValue: this.state.formData.date })
                 this.counter -= 1
                 break;
             }
@@ -101,7 +115,7 @@ class Dashboard extends React.Component {
                     journeyDetails: {
                         ...this.state.journeyDetails,
                         inputPlaceHolder: "Destination"
-                    }, steps: "Step 2", inputType: "text", inputTextHiddenFlag: false, currentValue: this.state.formData.destInput
+                    }, steps: "Step 2", inputType: "text", inputTextHiddenFlag: false, currentValue: this.state.formData.destination
                 })
                 this.counter -= 1
                 break;
@@ -111,7 +125,7 @@ class Dashboard extends React.Component {
                     journeyDetails: {
                         ...this.state.journeyDetails,
                         inputPlaceHolder: "Source"
-                    }, steps: "Step 1", backButtonDisabled: true, currentValue: this.state.formData.sourceInput
+                    }, steps: "Step 1", backButtonDisabled: true, currentValue: this.state.formData.source
                 })
                 this.counter -= 1
                 break;
@@ -132,13 +146,13 @@ class Dashboard extends React.Component {
         this.setState({ currentValue: event.target.value })
         switch (event.target.name) {
             case "Source": {
-                this.setFormData("sourceInput", event)
+                this.setFormData("source", event)
                 break;
             } case "Destination": {
-                this.setFormData("destInput", event)
+                this.setFormData("destination", event)
                 break;
             } case "Date": {
-                this.setFormData("dateInput", event)
+                this.setFormData("date", event)
                 break;
             }
         }
@@ -154,9 +168,9 @@ class Dashboard extends React.Component {
                         <form>
                             <input type={this.state.inputType} placeholder={this.state.journeyDetails.inputPlaceHolder} name={this.state.journeyDetails.inputPlaceHolder} onChange={this.evaluateInput} value={this.state.currentValue} hidden={this.state.inputTextHiddenFlag} /><br />
                             <div hidden={!this.state.inputTextHiddenFlag}>
-                                <h3><label>Source: {this.state.formData.sourceInput}</label></h3><br />
-                                <h3><label>Destination: {this.state.formData.destInput}</label></h3><br />
-                                <h3><label>Journey: {this.state.formData.dateInput}</label></h3><br />
+                                <h3><label>Source: {this.state.formData.source}</label></h3><br />
+                                <h3><label>Destination: {this.state.formData.destination}</label></h3><br />
+                                <h3><label>Journey: {this.state.formData.date}</label></h3><br />
                             </div>
                             <button className="btn btn-primary backButtonPlacer" disabled={this.state.backButtonDisabled} onClick={this.getBackData}>Back</button>
                             <button className="btn btn-primary nextButtonPlacer" onClick={this.getNextData}>Next</button>
