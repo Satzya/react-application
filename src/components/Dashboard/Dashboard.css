@@ -11,3 +11,9 @@
     margin-right: 100px;
     margin-top: 20px;
 }
+
+.errorMsg{
+    color: red;
+    font-size: 12px;
+    font-weight: inherit;
+}

@@ -27,8 +27,16 @@ class Dashboard extends React.Component {
             dashHiddenFlag: false,
             profileHiddenFlag: true,
             inputTextHiddenFlag: false,
-            backButtonDisabled: true
+            backButtonDisabled: true,
+            nextButtonDisabled: false,
+            errorMsg: '',
+            errorMsgFlag: false,
+            textInput: React.createRef()
         }
+    }
+
+    componentDidMount() {
+        this.state.textInput.current.focus();
     }
 
     setNavData = (idContent) => {
@@ -38,17 +46,21 @@ class Dashboard extends React.Component {
         idContent.currentTarget.classList.add("active")
         switch (idContent.currentTarget.id) {
             case "Profile": {
-                this.setState({ buttonName: "Profile" })
-                this.setState({ profileHiddenFlag: false })
-                this.setState({ dashHiddenFlag: true })
-                this.setState({ sectionHeading: "Profile Details" })
+                this.setState({
+                    buttonName: "Profile",
+                    profileHiddenFlag: false,
+                    dashHiddenFlag: true,
+                    sectionHeading: "Profile Details"
+                })
                 break;
             }
             case "Home": {
-                this.setState({ buttonName: "Add data" })
-                this.setState({ dashHiddenFlag: false })
-                this.setState({ profileHiddenFlag: true })
-                this.setState({ sectionHeading: "Plan Journey" })
+                this.setState({
+                    buttonName: "Add data",
+                    dashHiddenFlag: false,
+                    profileHiddenFlag: true,
+                    sectionHeading: "Plan Journey",
+                })
                 break;
             }
             default: {
@@ -60,7 +72,7 @@ class Dashboard extends React.Component {
 
     counter = 0
     async saveData() {
-        const response = await fetch("http://localhost:9999/abc", {
+        const response = await fetch("http://localhost:9999/saveDetails", {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -72,6 +84,8 @@ class Dashboard extends React.Component {
     }
     getNextData = (event) => {
         event.preventDefault()
+        this.setState({ errorMsgFlag: false })
+        this.state.textInput.current.focus();
         switch (this.counter) {
             case 0: {
                 this.setState({
@@ -103,7 +117,7 @@ class Dashboard extends React.Component {
     }
     getBackData = (event) => {
         event.preventDefault()
-        console.log(this.counter)
+        this.setState({ errorMsg: '' })
         switch (this.counter) {
             case 3: {
                 this.setState({ steps: "Step 3", inputType: "date", inputTextHiddenFlag: false, currentValue: this.state.formData.date })
@@ -132,6 +146,10 @@ class Dashboard extends React.Component {
             }
         }
     }
+    validateDetails = (event) => {
+        (event.target.value.length < 3) ? this.setState({ errorMsg: 'Min 3 Chars', errorMsgFlag: true, nextButtonDisabled: true })
+            : this.setState({ errorMsg: '', nextButtonDisabled: false })
+    }
     setFormData = (inputBlock, event) => {
         this.setState({
             formData: {
@@ -142,7 +160,6 @@ class Dashboard extends React.Component {
     }
 
     evaluateInput = (event) => {
-        console.log(event.target.value);
         this.setState({ currentValue: event.target.value })
         switch (event.target.name) {
             case "Source": {
@@ -156,6 +173,7 @@ class Dashboard extends React.Component {
                 break;
             }
         }
+        if (this.state.errorMsgFlag) this.validateDetails(event) /* Validate input data */
     }
 
     dashBoardContent = () => {
@@ -166,14 +184,15 @@ class Dashboard extends React.Component {
                     <label>{this.state.steps}</label><br />
                     <div>
                         <form>
-                            <input type={this.state.inputType} placeholder={this.state.journeyDetails.inputPlaceHolder} name={this.state.journeyDetails.inputPlaceHolder} onChange={this.evaluateInput} value={this.state.currentValue} hidden={this.state.inputTextHiddenFlag} /><br />
+                            <input type={this.state.inputType} placeholder={this.state.journeyDetails.inputPlaceHolder} name={this.state.journeyDetails.inputPlaceHolder} onChange={this.evaluateInput} onBlur={this.validateDetails} value={this.state.currentValue} hidden={this.state.inputTextHiddenFlag} ref={this.state.textInput} /><br />
+                            <label className="errorMsg" >{this.state.errorMsg}</label><br />
                             <div hidden={!this.state.inputTextHiddenFlag}>
                                 <h3><label>Source: {this.state.formData.source}</label></h3><br />
                                 <h3><label>Destination: {this.state.formData.destination}</label></h3><br />
                                 <h3><label>Journey: {this.state.formData.date}</label></h3><br />
                             </div>
                             <button className="btn btn-primary backButtonPlacer" disabled={this.state.backButtonDisabled} onClick={this.getBackData}>Back</button>
-                            <button className="btn btn-primary nextButtonPlacer" onClick={this.getNextData}>Next</button>
+                            <button className="btn btn-primary nextButtonPlacer" disabled={this.state.nextButtonDisabled} onClick={this.getNextData}>Next</button>
                         </form>
                     </div>
                 </div>
