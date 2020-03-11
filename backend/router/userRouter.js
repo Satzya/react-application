@@ -16,9 +16,7 @@ router.post('/saveDetails', async (req, res) => {
 router.post('/loginDetails', async (req, res, next) => {
     try {
         const user = await User.findOne({ userName: `${req.body.userName}`, password: `${req.body.password}` })
-        console.log('PPP')
         const token = await generateToken(req.body);
-        console.log(token)
         res.cookie('Token', token)
         res.status(200).send(user)
     } catch (e) {
