@@ -1,18 +1,24 @@
 const express = require('express')
 const bodyParser = require('body-parser');
-const User = require('./../models/user')
+const JourneyDetails = require('../models/journeyDetails')
+const User = require('../models/user')
 const router = express.Router()
-// const cors = require('cors')
-
 router.use(bodyParser.urlencoded({ extended: true }))
 router.use(bodyParser.json())
-// router.use(cors())
 
 router.post('/saveDetails', async (req, res) => {
-    console.log('Hit', req.body)
-    const user = new User(req.body);
-    await user.save()
+    const journeyDetails = new JourneyDetails(req.body);
+    await journeyDetails.save()
     res.json(req.body)
+})
+
+router.post('/loginDetails', async (req, res, next) => {
+    try {
+        let user = await User.findOne({ userName: `${req.body.userName}`, password: `${req.body.password}` })
+        res.send(user)
+    } catch (e) {
+        res.send(e)
+    }
 })
 
 module.exports = router

@@ -2,8 +2,9 @@ import React from "react";
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Profile from '../Profile/Profile';
+import ConfigApiDetails from '../services/configApi'
 import './Dashboard.css'
-
+let ConfigApiDetailsCall = new ConfigApiDetails();
 class Dashboard extends React.Component {
     constructor(props) {
         super(props)
@@ -71,17 +72,7 @@ class Dashboard extends React.Component {
     }
 
     counter = 0
-    async saveData() {
-        const response = await fetch("http://localhost:9999/saveDetails", {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.formData)
-        })
-        console.log(await response.json())
-    }
+
     getNextData = (event) => {
         event.preventDefault()
         this.setState({ errorMsgFlag: false })
@@ -111,7 +102,7 @@ class Dashboard extends React.Component {
                 this.counter += 1
                 break;
             } case 3: {
-                this.saveData()
+                ConfigApiDetailsCall.saveData(this.state.formData)
             }
         }
     }

@@ -1,23 +1,20 @@
 import React from "react";
 import './Login.css'
-
+import ConfigApiDetails from './../services/configApi'
+let ConfigApiDetailsCall = new ConfigApiDetails();
 class Login extends React.Component {
 
-    evaluateUser = (event) => {
+    evaluateUser = async (event) => {
         event.preventDefault()
         const userName = event.target.theUserName.value;
         const password = event.target.theUserPassword.value;
-        if (userName === 'abc' && password === '123')
-            this.accessDashBoard(11, userName);
-        else if (userName === 'def' && password === '456')
-            this.accessDashBoard(22);
-        else
-            alert("Invalid credentials");
+        let user = await ConfigApiDetailsCall.loginData({ userName, password })
+        this.accessDashBoard(user)
     }
 
-    accessDashBoard = (role, userName) => {
-        if (role === 11) {
-            this.props.onLoginSuccess(userName)
+    accessDashBoard = (user) => {
+        if (user.role === 11) {
+            this.props.onLoginSuccess(user.userName)
         }
     }
     setUserID = (event) => {

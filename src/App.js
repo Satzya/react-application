@@ -26,8 +26,8 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        {/* <Login hiddenFlag={this.state.loginHiddenFlag} onLoginSuccess={this.onLoginSuccess} userName={this.state.userName} getUserID={this.getUserID} /> */}
-        <Dashboard hiddenFlag={!this.state.dashHiddenFlag} userName={this.state.userName} />
+        <Login hiddenFlag={this.state.loginHiddenFlag} onLoginSuccess={this.onLoginSuccess} userName={this.state.userName} getUserID={this.getUserID} />
+        <Dashboard hiddenFlag={this.state.dashHiddenFlag} userName={this.state.userName} />
       </div>
     )
   }
