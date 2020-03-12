@@ -18,6 +18,8 @@ router.post('/loginDetails', async (req, res, next) => {
         const user = await User.findOne({ userName: `${req.body.userName}`, password: `${req.body.password}` })
         const token = await generateToken(req.body);
         res.cookie('Token', token)
+        res.cookie('UserName', req.body.userName)
+        res.cookie('Password', req.body.password)
         res.status(200).send(user)
     } catch (e) {
         res.send(e)

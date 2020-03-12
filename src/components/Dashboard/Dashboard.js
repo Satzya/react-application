@@ -3,7 +3,9 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Profile from '../Profile/Profile';
 import ConfigApiDetails from '../services/configApi'
+import JourneyHistory from './../JourneyHistory/journeyHistory'
 import './Dashboard.css'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 let ConfigApiDetailsCall = new ConfigApiDetails();
 class Dashboard extends React.Component {
     constructor(props) {
@@ -202,6 +204,17 @@ class Dashboard extends React.Component {
                 />
                 {this.dashBoardContent()}
                 <Profile profileHiddenFlag={this.state.profileHiddenFlag} />
+                <Router>
+                    <div>
+                        <Link to='/journeyhistory'>Journey History</Link>
+                        <Switch>
+                            <Route path="/journeyHistory">
+                                <JourneyHistory />
+                            </Route>
+                        </Switch>
+                    </div>
+
+                </Router>
                 <Footer />
             </div>
         )
