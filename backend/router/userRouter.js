@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const JourneyDetails = require('../models/journeyDetails')
 const User = require('../models/user')
+const auth = require('./../Authorization/auth');
 const router = express.Router()
 const generateToken = require('./../token/generateToken')
 router.use(bodyParser.urlencoded({ extended: true }))
@@ -18,11 +19,17 @@ router.post('/loginDetails', async (req, res, next) => {
         const user = await User.findOne({ userName: `${req.body.userName}`, password: `${req.body.password}` })
         const token = await generateToken(req.body);
         res.cookie('Token', token)
-        res.cookie('UserName', req.body.userName)
-        res.cookie('Password', req.body.password)
-        res.status(200).send(user)
+        res.status(200).json(user)
     } catch (e) {
         res.send(e)
+    }
+})
+
+router.get('/journeyHistory1', auth, (req, res) => {
+    try {
+        res.status(200).send()
+    } catch (e) {
+        res.status(400).send(e)
     }
 })
 

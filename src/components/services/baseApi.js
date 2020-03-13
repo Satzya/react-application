@@ -11,10 +11,27 @@ class BaseApi {
         return await response.json()
     }
 
+    get = async (url) => {
+        const response = await fetch(`${url}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        // console.log('=====', await response);
+        // console.log((await response.status === 401) ? false : true)
+        // return (await response.status === 401) ? false : true;
+        return await response.status
+    }
+
     postLoginData = (data) => {
         return this.post(data, 'loginDetails')
     }
 
+    getJourneyData = () => {
+        return this.get('/journeyHistory1')
+    }
 }
 
 export default BaseApi;
